@@ -14,6 +14,13 @@ function RoomCard({ room, avail, onBook }) {
   const status = statusOf(avail);
   const fmtTime = (iso) =>
     new Date(iso).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" });
+  const initials = (name) =>
+    (name || "?")
+      .split(" ")
+      .map((w) => w[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase();
 
   return (
     <div className={`room-card ${status}`}>
@@ -34,8 +41,29 @@ function RoomCard({ room, avail, onBook }) {
       )}
 
       {status === "busy" && avail.busy?.length > 0 && (
-        <div className="busy-times">
-          ติด: {avail.busy.map((b) => `${fmtTime(b.start)}–${fmtTime(b.end)}`).join(", ")}
+        <div className="event-list">
+          <div className="event-list-label">มีการจองในช่วงนี้</div>
+          {avail.busy.map((b, i) => (
+            <div className="event-item" key={i}>
+              <span className="event-dot" />
+              <div className="event-body">
+                <div className="event-time">
+                  {fmtTime(b.start)}–{fmtTime(b.end)}
+                </div>
+                <div className="event-title">{b.title || "ไม่ว่าง"}</div>
+                {(b.organizer || b.organizerEmail) && (
+                  <div className="event-by">
+                    <span className="event-avatar">
+                      {initials(b.organizer || b.organizerEmail)}
+                    </span>
+                    {b.organizer
+                      ? `${b.organizer}${b.organizerEmail ? ` · ${b.organizerEmail}` : ""}`
+                      : b.organizerEmail}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
