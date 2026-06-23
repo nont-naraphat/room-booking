@@ -1,8 +1,10 @@
 import { useState } from "react";
 
+const DOMAIN = "@21sunpassion.com";
+
 export default function BookingModal({ room, start, end, onClose, onConfirm }) {
   const [title, setTitle] = useState("");
-  const [guests, setGuests] = useState("");
+  const [attendees, setAttendees] = useState([""]); // เริ่มด้วย 1 แถวว่าง
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
@@ -16,6 +18,19 @@ export default function BookingModal({ room, start, end, onClose, onConfirm }) {
       minute: "2-digit",
     });
 
+  // มี @ อยู่แล้ว = ใช้ตามนั้น / ไม่มี = เติมโดเมน
+  const resolveEmail = (v) => {
+    const t = v.trim();
+    if (!t) return "";
+    return t.includes("@") ? t : t + DOMAIN;
+  };
+
+  const setAttendee = (i, v) =>
+    setAttendees((a) => a.map((x, idx) => (idx === i ? v : x)));
+  const addAttendee = () => setAttendees((a) => [...a, ""]);
+  const removeAttendee = (i) =>
+    setAttendees((a) => (a.length === 1 ? [""] : a.filter((_, idx) => idx !== i)));
+
   async function submit() {
     if (!title.trim()) return setError("กรุณาใส่หัวข้อการประชุม");
     setSaving(true);
@@ -27,10 +42,7 @@ export default function BookingModal({ room, start, end, onClose, onConfirm }) {
         start,
         end,
         description: description.trim(),
-        guests: guests
-          .split(/[,\s]+/)
-          .map((g) => g.trim())
-          .filter(Boolean),
+        guests: attendees.map(resolveEmail).filter(Boolean),
       });
     } catch (e) {
       setError(e.message);
@@ -45,7 +57,11 @@ export default function BookingModal({ room, start, end, onClose, onConfirm }) {
         <p className="sub">
           {room.building} {room.floor} · จุได้ {room.capacity} คน
           <br />
-          {fmt(start)} – {new Date(end).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })}
+          {fmt(start)} –{" "}
+          {new Date(end).toLocaleTimeString("th-TH", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
         </p>
 
         <div className="field">
@@ -60,12 +76,36 @@ export default function BookingModal({ room, start, end, onClose, onConfirm }) {
         </div>
 
         <div className="field">
-          <label>ผู้เข้าร่วม (อีเมล คั่นด้วยเว้นวรรค)</label>
-          <input
-            value={guests}
-            onChange={(e) => setGuests(e.target.value)}
-            placeholder="a@company.com b@company.com"
-          />
+          <label>ผู้เข้าร่วม</label>
+          {attendees.map((v, i) => {
+            const full = v.includes("@");
+            return (
+              <div className="attendee-row" key={i}>
+                <div className="attendee-input">
+                  <input
+                    value={v}
+                    onChange={(e) => setAttendee(i, e.target.value)}
+                    placeholder="ชื่อผู้ใช้ เช่น somchai"
+                  />
+                  {!full && <span className="attendee-suffix">{DOMAIN}</span>}
+                </div>
+                <button
+                  type="button"
+                  className="attendee-remove"
+                  onClick={() => removeAttendee(i)}
+                  aria-label="ลบ"
+                >
+                  ×
+                </button>
+              </div>
+            );
+          })}
+          <button type="button" className="attendee-add" onClick={addAttendee}>
+            + เพิ่มผู้เข้าร่วม
+          </button>
+          <div className="attendee-hint">
+            พิมพ์แค่ชื่อผู้ใช้ ระบบจะเติม {DOMAIN} ให้ · หรือพิมพ์อีเมลเต็ม (มี @) ก็ได้
+          </div>
         </div>
 
         <div className="field">
