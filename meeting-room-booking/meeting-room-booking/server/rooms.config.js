@@ -37,7 +37,7 @@ export const ROOMS = [
     resourceEmail: "c_18830j4lserh0j31hv8q3iojdpaei@resource.calendar.google.com",
   },
 
-  // ---- BH, ชั้น 17 ----
+  // ---- Bearhouse and Sunsu, Rasa Two ชั้น 17 ----
   {
     id: "dubai",
     name: "Dubai",
