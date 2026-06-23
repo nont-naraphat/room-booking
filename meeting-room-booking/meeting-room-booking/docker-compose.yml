@@ -1,0 +1,31 @@
+services:
+  roombook:
+    # วิธี A: ให้ Portainer build จาก Dockerfile (ใช้กับ stack แบบ Repository)
+    build: .
+    image: roombook:latest
+    # วิธี B: ถ้า push image ขึ้น registry แล้ว ให้คอมเมนต์ build ทิ้ง
+    #   แล้วใช้: image: your-registry/roombook:latest
+    container_name: roombook
+    restart: unless-stopped
+    ports:
+      - "4000:4000"        # host:container — เปลี่ยนเลข host ได้ตามต้องการ
+    environment:
+      NODE_ENV: production
+      PORT: "4000"
+      TIMEZONE: Asia/Bangkok
+      # โดเมนสาธารณะของแอป (ต้องเป็น HTTPS เพื่อให้ cookie ปลอดภัยทำงาน)
+      CLIENT_URL: ${CLIENT_URL}
+      # OAuth จาก Google Cloud Console
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI}
+      # session keys — สุ่มยาว ๆ สองอัน
+      SESSION_KEY1: ${SESSION_KEY1}
+      SESSION_KEY2: ${SESSION_KEY2}
+      # จำกัดเฉพาะโดเมนองค์กร (เว้นว่างได้)
+      ALLOWED_HOSTED_DOMAIN: ${ALLOWED_HOSTED_DOMAIN}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:4000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
