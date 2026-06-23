@@ -25,7 +25,7 @@ export const ROOMS = [
     floor: "fl.1",
     capacity: 8,
     features: ["TV", "Whiteboard"],
-    resourceEmail: "REPLACE_ME_CK1@resource.calendar.google.com",
+    resourceEmail: "c_1886m7dlqsfhiik4l0vmdj6g4guvg@resource.calendar.google.com",
   },
   {
     id: "ck-2",
@@ -34,7 +34,7 @@ export const ROOMS = [
     floor: "fl.1",
     capacity: 6,
     features: ["TV"],
-    resourceEmail: "REPLACE_ME_CK2@resource.calendar.google.com",
+    resourceEmail: "c_18830j4lserh0j31hv8q3iojdpaei@resource.calendar.google.com",
   },
 
   // ---- BH, ชั้น 17 ----
@@ -45,7 +45,7 @@ export const ROOMS = [
     floor: "fl.17",
     capacity: 12,
     features: ["TV", "Video conference", "Whiteboard"],
-    resourceEmail: "REPLACE_ME_DUBAI@resource.calendar.google.com",
+    resourceEmail: "c_1882t2scrcaj8g2tl136hlpm7e3fa@resource.calendar.google.com",
   },
   {
     id: "frankfurt",
@@ -54,7 +54,7 @@ export const ROOMS = [
     floor: "fl.17",
     capacity: 10,
     features: ["TV", "Video conference"],
-    resourceEmail: "REPLACE_ME_FRANKFURT@resource.calendar.google.com",
+    resourceEmail: "c_1889njakah0uei6iis66ivug7h6uo@resource.calendar.google.com",
   },
   {
     id: "new-york",
@@ -63,7 +63,7 @@ export const ROOMS = [
     floor: "fl.17",
     capacity: 8,
     features: ["TV"],
-    resourceEmail: "REPLACE_ME_NEWYORK@resource.calendar.google.com",
+    resourceEmail: "c_1881v31e1dq3ahgllk70ofn5nddk0@resource.calendar.google.com",
   },
   {
     id: "shanghai",
@@ -72,7 +72,7 @@ export const ROOMS = [
     floor: "fl.17",
     capacity: 6,
     features: ["TV"],
-    resourceEmail: "REPLACE_ME_SHANGHAI@resource.calendar.google.com",
+    resourceEmail: "c_188atdsqj57i2h5ii57hjnq82tuge@resource.calendar.google.com",
   },
   {
     id: "sydney",
@@ -81,7 +81,7 @@ export const ROOMS = [
     floor: "fl.17",
     capacity: 4,
     features: ["TV"],
-    resourceEmail: "REPLACE_ME_SYDNEY@resource.calendar.google.com",
+    resourceEmail: "c_1882uphqv6ijiid2j5dsjk903r7qi@resource.calendar.google.com",
   },
   {
     id: "tokyo",
@@ -90,7 +90,7 @@ export const ROOMS = [
     floor: "fl.17",
     capacity: 4,
     features: ["Whiteboard"],
-    resourceEmail: "REPLACE_ME_TOKYO@resource.calendar.google.com",
+    resourceEmail: "c_1888c47vlr34aimqic0eobs1bbjb2@resource.calendar.google.com",
   },
 ];
 
