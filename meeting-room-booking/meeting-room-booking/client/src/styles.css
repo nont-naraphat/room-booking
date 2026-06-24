@@ -44,6 +44,8 @@ input, select, textarea { font-family: inherit; font-size: 15px; }
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
   padding: 14px 28px;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
@@ -79,6 +81,33 @@ input, select, textarea { font-family: inherit; font-size: 15px; }
   font-size: 13px; padding: 6px 8px; border-radius: 8px;
 }
 .linkbtn:hover { background: var(--bg); color: var(--ink); }
+
+/* ---------- Sync status chips (top bar) ---------- */
+.sync-cluster { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+.sync-chip {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 999px; padding: 5px 12px 5px 7px;
+}
+.sync-ic {
+  width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
+  display: grid; place-items: center; font-size: 12px; font-weight: 700; color: #fff;
+}
+.sync-ic.gcal { background: #fff; border: 1px solid var(--border); color: #4285f4; font-size: 12px; }
+.sync-ic.lark { background: #00d6b9; }
+.sync-dot { width: 8px; height: 8px; border-radius: 50%; position: relative; flex-shrink: 0; }
+.sync-dot.ok { background: var(--free); }
+.sync-dot.err { background: var(--busy); }
+.sync-dot.live::after {
+  content: ""; position: absolute; inset: -3px; border-radius: 50%;
+  border: 2px solid var(--free); opacity: .45; animation: syncpulse 1.8s infinite;
+}
+@keyframes syncpulse { 0% { transform: scale(1); opacity: .5; } 100% { transform: scale(2.3); opacity: 0; } }
+.sync-tx b { font-size: 12px; display: block; line-height: 1.15; font-weight: 600; }
+.sync-tx span { font-size: 10.5px; color: var(--muted); }
+@media (max-width: 760px) {
+  .sync-cluster { order: 3; width: 100%; }
+}
 
 .shell {
   max-width: 1180px;
