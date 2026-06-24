@@ -190,13 +190,13 @@ export default function App() {
               </span>
             </span>
           </div>
-          {/* Lark: แสดงสถานะไว้ก่อน (ยังไม่ได้ต่อ API จริง) */}
+          {/* Lark: ยังไม่ได้ต่อ API จริง */}
           <div className="sync-chip">
             <span className="sync-ic"><img src="/lark.png" alt="Lark" /></span>
-            <span className="sync-dot ok" />
+            <span className="sync-dot err" />
             <span className="sync-tx">
               <b>Lark</b>
-              <span>เชื่อมต่อแล้ว</span>
+              <span>ยังไม่ซิงค์</span>
             </span>
           </div>
         </div>
