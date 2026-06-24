@@ -418,3 +418,8 @@ input, select, textarea { font-family: inherit; font-size: 15px; }
 }
 
 :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.btn.btn-now {
+  background: var(--primary-soft); color: var(--primary-dark);
+  border-color: transparent; font-weight: 600;
+}
+.btn.btn-now:hover { filter: brightness(0.97); background: var(--primary-soft); }
