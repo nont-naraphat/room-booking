@@ -39,6 +39,8 @@ export default function App() {
 
   const [modalRoom, setModalRoom] = useState(null);
   const [toast, setToast] = useState(null);
+  const [lastSync, setLastSync] = useState(null); // เวลา sync สำเร็จล่าสุด (Google)
+  const [syncError, setSyncError] = useState(false);
 
   const showToast = (message, type = "ok") => {
     setToast({ message, type });
@@ -102,7 +104,10 @@ export default function App() {
       const map = {};
       for (const a of availability) map[a.roomId] = a;
       setAvailability(map);
+      setLastSync(new Date());
+      setSyncError(false);
     } catch (e) {
+      setSyncError(true);
       showToast(e.message, "err");
     } finally {
       setLoadingAvail(false);
@@ -157,6 +162,35 @@ export default function App() {
         <div className="brand">
           <span className="dot"><img src="/logo.png" alt="SUNSU" /></span> จองห้องประชุม
         </div>
+
+        <div className="sync-cluster">
+          <div className="sync-chip">
+            <span className="sync-ic gcal">31</span>
+            <span className={`sync-dot ${syncError ? "err" : "ok"} ${loadingAvail ? "live" : ""}`} />
+            <span className="sync-tx">
+              <b>Google Calendar</b>
+              <span>
+                {loadingAvail
+                  ? "กำลังซิงค์…"
+                  : syncError
+                  ? "เชื่อมต่อไม่ได้"
+                  : lastSync
+                  ? `ซิงค์ล่าสุด ${lastSync.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })}`
+                  : "เชื่อมต่อแล้ว"}
+              </span>
+            </span>
+          </div>
+          {/* Lark: แสดงสถานะไว้ก่อน (ยังไม่ได้ต่อ API จริง) */}
+          <div className="sync-chip">
+            <span className="sync-ic lark">L</span>
+            <span className="sync-dot ok" />
+            <span className="sync-tx">
+              <b>Lark</b>
+              <span>เชื่อมต่อแล้ว</span>
+            </span>
+          </div>
+        </div>
+
         <div className="user-chip">
           {user.picture && <img src={user.picture} alt="" referrerPolicy="no-referrer" />}
           <div>
