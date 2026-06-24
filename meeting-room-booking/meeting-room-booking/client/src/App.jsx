@@ -165,7 +165,7 @@ export default function App() {
 
         <div className="sync-cluster">
           <div className="sync-chip">
-            <span className="sync-ic gcal">31</span>
+            <span className="sync-ic"><img src="/gcal.png" alt="Google Calendar" /></span>
             <span className={`sync-dot ${syncError ? "err" : "ok"} ${loadingAvail ? "live" : ""}`} />
             <span className="sync-tx">
               <b>Google Calendar</b>
@@ -182,7 +182,7 @@ export default function App() {
           </div>
           {/* Lark: แสดงสถานะไว้ก่อน (ยังไม่ได้ต่อ API จริง) */}
           <div className="sync-chip">
-            <span className="sync-ic lark">L</span>
+            <span className="sync-ic"><img src="/lark.png" alt="Lark" /></span>
             <span className="sync-dot ok" />
             <span className="sync-tx">
               <b>Lark</b>
