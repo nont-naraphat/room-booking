@@ -122,6 +122,16 @@ export default function App() {
   }, [user, rooms, checkAvailability]);
 
   // ---------- actions ----------
+  // ตั้งวันที่/เวลาเป็นปัจจุบัน (เริ่ม=ตอนนี้, สิ้นสุด=+1 ชม.) แล้วเช็คห้องว่าง
+  function useNow() {
+    const now = new Date();
+    const pad = (n) => String(n).padStart(2, "0");
+    const hm = (d) => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    setDate(now.toISOString().slice(0, 10));
+    setStartTime(hm(now));
+    setEndTime(hm(new Date(now.getTime() + 60 * 60 * 1000)));
+  }
+
   async function confirmBooking(payload) {
     await api.createBooking(payload);
     setModalRoom(null);
@@ -233,6 +243,9 @@ export default function App() {
                 onChange={(e) => setEndTime(e.target.value)}
               />
             </div>
+            <button className="btn btn-now" onClick={useNow}>
+              🕐 ตอนนี้
+            </button>
             <button className="btn" onClick={checkAvailability}>
               ↻ เช็คห้องว่าง
             </button>
