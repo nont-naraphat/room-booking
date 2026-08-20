@@ -24,7 +24,7 @@ services:
       # โดเมนของเรา
       OUR_DOMAINS: "21sunpassion.com,office21sun.com"
       # บัญชี super admin จริงที่โค้ดเอาไป impersonate (เปลี่ยนเป็นของจริงตอนจะกดใช้งาน)
-      GOOGLE_ADMIN_SUBJECT: "admin@21sunpassion.com"
+      GOOGLE_ADMIN_SUBJECT: "nont.naraphat@21sunpassion.com"
       # path ของไฟล์ service account (ค่อย mount ตอนจะกดใช้งานจริง — ดูหมายเหตุ)
       GOOGLE_SERVICE_ACCOUNT_FILE: "/app/secrets/sa-21sun.json"
 
