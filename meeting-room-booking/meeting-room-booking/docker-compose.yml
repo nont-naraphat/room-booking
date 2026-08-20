@@ -22,7 +22,7 @@ services:
       GOOGLE_ADMIN_SUBJECT: "nont.naraphat@21sunpassion.com"
       GOOGLE_SERVICE_ACCOUNT_FILE: "/app/secrets/sa-21sun.json"
     volumes:
-      - ./secrets/sa-21sun.json:/app/secrets/sa-21sun.json:ro
+      - /volume1/docker/roombook-secrets/sa-21sun.json:/app/secrets/sa-21sun.json:ro
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:4000/health"]
       interval: 30s
