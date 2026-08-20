@@ -32,6 +32,15 @@ export const api = {
   // ตารางทั้งวันของทุกห้อง (มุมมอง Timeline)
   schedule: (date) => req(`/api/schedule?date=${date}`),
 
+  // ---- Admin cleanup: การจองที่ organizer หายไปแล้ว ----
+  adminOrphans: (daysAhead = 365) =>
+    req(`/api/admin/orphans?daysAhead=${daysAhead}`),
+  adminCancelOrphan: (payload) =>
+    req(`/api/admin/orphans/cancel`, {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
   // เปิด stream รับสัญญาณ real-time เมื่อมีการเปลี่ยนแปลง (two-way sync)
   subscribe(onChange) {
     const es = new EventSource("/api/stream", { withCredentials: true });
