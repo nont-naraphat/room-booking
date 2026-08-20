@@ -44,10 +44,14 @@ export default function AdminCleanup({ onToast }) {
   }, []);
 
   async function cancelOne(row) {
+    const whoLabel = row.goneWho === "creator" ? "creator (คนสร้าง)" : "organizer";
     const parts = [
       `ยกเลิกการจอง "${row.title}"`,
       `ห้อง: ${row.roomName}`,
-      `organizer: ${row.organizer || "(ไม่มี)"} — ${STATUS_LABEL[row.status] || row.status}`,
+      `${whoLabel} ที่หายไป: ${row.goneEmail || "(ไม่มี)"} — ${STATUS_LABEL[row.status] || row.status}`,
+      row.goneWho === "creator" && row.organizerActive
+        ? `⚠️ organizer ปัจจุบัน (${row.organizer}) ยัง active — การลบจะยกเลิก event นี้ให้ทุกคนด้วย`
+        : "",
       row.isRecurring ? "⚠️ เป็นการจองแบบประจำ (recurring) — จะลบทั้งชุด" : "",
       row.externalCount > 0
         ? `⚠️ มีผู้ร่วม ${row.externalCount} คนนอกโดเมน — เราลบ copy ของเขาไม่ได้ (Google จำกัด)`
@@ -56,7 +60,7 @@ export default function AdminCleanup({ onToast }) {
       "ระบบจะ backup event ก่อนลบ และลบให้ทุกคนในโดเมนเท่าที่ทำได้",
       "ลบแล้วยังกู้จาก Trash ของปฏิทินได้ภายใน 30 วัน",
       "",
-      "ยืนยันลบจริง?",
+      "ยืนยันลบจริง? (event จะหายจากทุก member ที่ถูกเชิญ)",
     ]
       .filter(Boolean)
       .join("\n");
@@ -103,7 +107,7 @@ export default function AdminCleanup({ onToast }) {
         <div>
           <h2>เคลียร์การจองที่เจ้าของหายไปแล้ว</h2>
           <p className="admin-sub">
-            การจองในห้องที่ organizer ถูกลบ / suspend / ไม่มี organizer — กั๊ก slot คนอื่น
+            การจองในห้องที่ organizer หรือ creator ถูกลบ / suspend — กั๊ก slot คนอื่น
           </p>
         </div>
         <div className="admin-controls">
@@ -171,10 +175,18 @@ export default function AdminCleanup({ onToast }) {
                     </td>
                     <td className="nowrap">{fmt(r.start)}</td>
                     <td>
-                      <div className="org-email">{r.organizer || "—"}</div>
+                      <div className="org-email">{r.goneEmail || "—"}</div>
                       <span className={`badge ${r.status}`}>
                         {STATUS_LABEL[r.status] || r.status}
                       </span>
+                      <span className="who">
+                        {r.goneWho === "creator" ? " creator หาย" : " organizer หาย"}
+                      </span>
+                      {r.goneWho === "creator" && r.organizerActive && (
+                        <div className="who-note">
+                          organizer ปัจจุบันยัง active — ลบจะยกเลิกให้ทุกคน
+                        </div>
+                      )}
                     </td>
                     <td className="nowrap">
                       <span title="ในโดเมน">👤 {r.internalCount}</span>
