@@ -554,3 +554,6 @@ input, select, textarea { font-family: inherit; font-size: 15px; }
   .viewnav { order: 2; }
   .admin-controls { width: 100%; }
 }
+
+.admin-table .who { font-size: 11px; color: var(--faint); margin-left: 6px; }
+.admin-table .who-note { font-size: 11px; color: var(--warn); margin-top: 4px; }
