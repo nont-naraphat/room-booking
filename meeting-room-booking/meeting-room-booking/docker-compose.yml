@@ -20,7 +20,7 @@ services:
       ADMIN_EMAILS: "nont.naraphat@21sunpassion.com,it@21sunpassion.com"
       OUR_DOMAINS: "21sunpassion.com,office21sun.com"
       GOOGLE_ADMIN_SUBJECT: "nont.naraphat@21sunpassion.com"
-      GOOGLE_SERVICE_ACCOUNT_FILE: "/app/secrets/sa-21sun.json"
+      GOOGLE_SERVICE_ACCOUNT_FILE: "/app/secrets/sa-roombook.json"
     volumes:
       - /volume1/docker/roombook-secrets/sa-21sun.json:/app/secrets/sa-21sun.json:ro
     healthcheck:
