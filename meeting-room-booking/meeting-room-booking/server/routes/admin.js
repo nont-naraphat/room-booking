@@ -156,15 +156,45 @@ router.get("/admin/orphans", adminOnly, async (req, res) => {
 
         for (const ev of data.items || []) {
           if (ev.status === "cancelled") continue;
+
           const org = ev.organizer || {};
           const orgEmail = org.email || "";
-          // organizer = ห้องเอง -> ข้าม
-          if (org.self || orgEmail.toLowerCase() === room.resourceEmail.toLowerCase())
-            continue;
+          const creatorEmail = ev.creator?.email || "";
 
-          const st = await orgStatus(dir, orgEmail, ourDomains, cache);
-          // organizer ยัง active หรือเป็นคนนอกโดเมน -> ไม่ใช่ orphan ของเรา ไม่แตะ
-          if (st.status === "ACTIVE" || st.status === "EXTERNAL") continue;
+          // organizer = ห้องเอง?
+          const orgIsRoom =
+            org.self ||
+            orgEmail.toLowerCase() === room.resourceEmail.toLowerCase();
+
+          // เช็คสถานะ "ทั้ง organizer และ creator"
+          // (เคส transfer ownership: organizer ถูกโอนให้คนใหม่ แต่ creator เดิมออกไปแล้ว)
+          const orgSt = orgIsRoom
+            ? { status: "ROOM", name: "" }
+            : await orgStatus(dir, orgEmail, ourDomains, cache);
+          const creSt = await orgStatus(dir, creatorEmail, ourDomains, cache);
+
+          const GONE = ["DELETED_USER", "SUSPENDED_USER", "NO_ORGANIZER"];
+          const orgGone = !orgIsRoom && GONE.includes(orgSt.status);
+          const creGone = ["DELETED_USER", "SUSPENDED_USER"].includes(creSt.status);
+
+          let status = null; // สถานะที่จะโชว์
+          let goneWho = null; // "organizer" | "creator"
+          let goneEmail = "";
+          let organizerActive = false;
+
+          if (orgGone) {
+            status = orgSt.status;
+            goneWho = "organizer";
+            goneEmail = orgEmail;
+          } else if (creGone) {
+            // creator หายไป แต่ organizer ยังอยู่/เป็นห้อง/นอกโดเมน
+            status = creSt.status;
+            goneWho = "creator";
+            goneEmail = creatorEmail;
+            organizerActive = orgSt.status === "ACTIVE";
+          } else {
+            continue; // ทั้ง organizer และ creator ยัง active/นอกโดเมน -> ไม่ยุ่ง
+          }
 
           const { internal, external } = splitGuests(ev.attendees, ourDomains);
           rows.push({
@@ -175,9 +205,14 @@ router.get("/admin/orphans", adminOnly, async (req, res) => {
             title: ev.summary || "(ไม่มีหัวข้อ)",
             start: ev.start?.dateTime || ev.start?.date,
             end: ev.end?.dateTime || ev.end?.date,
-            organizer: orgEmail,
-            organizerName: st.name || "",
-            status: st.status, // DELETED_USER | SUSPENDED_USER | NO_ORGANIZER
+            organizer: orgEmail, // organizer ปัจจุบัน (ใช้ตอนลบ)
+            organizerStatus: orgIsRoom ? "ROOM" : orgSt.status,
+            creator: creatorEmail,
+            creatorStatus: creSt.status,
+            goneWho, // ใครหาย
+            goneEmail, // อีเมลคนที่หาย
+            organizerActive, // organizer ปัจจุบันยัง active ไหม
+            status, // DELETED_USER | SUSPENDED_USER | NO_ORGANIZER
             isRecurring: !!ev.recurringEventId,
             internalCount: internal.length,
             externalCount: external.length,
