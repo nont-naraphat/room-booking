@@ -4,6 +4,7 @@ import Login from "./components/Login.jsx";
 import RoomBoard from "./components/RoomBoard.jsx";
 import MyBookings from "./components/MyBookings.jsx";
 import BookingModal from "./components/BookingModal.jsx";
+import AdminCleanup from "./components/AdminCleanup.jsx";
 
 // ---------- time helpers ----------
 function todayStr() {
@@ -38,6 +39,7 @@ export default function App() {
   const [endTime, setEndTime] = useState(addHour(nextHalfHour()));
 
   const [modalRoom, setModalRoom] = useState(null);
+  const [view, setView] = useState("book"); // "book" | "admin"
   const [toast, setToast] = useState(null);
   const [lastSync, setLastSync] = useState(null); // เวลา sync สำเร็จล่าสุด (Google)
   const [syncError, setSyncError] = useState(false);
@@ -173,6 +175,23 @@ export default function App() {
           <span className="dot"><img src="/logo.png" alt="SUNSU" /></span> จองห้องประชุม
         </div>
 
+        {user.isAdmin && (
+          <nav className="viewnav">
+            <button
+              className={view === "book" ? "active" : ""}
+              onClick={() => setView("book")}
+            >
+              จองห้อง
+            </button>
+            <button
+              className={view === "admin" ? "active" : ""}
+              onClick={() => setView("admin")}
+            >
+              🧹 เคลียร์ค้าง
+            </button>
+          </nav>
+        )}
+
         <div className="sync-cluster">
           <div className="sync-chip">
             <span className="sync-ic"><img src="/gcal.png" alt="Google Calendar" /></span>
@@ -211,7 +230,12 @@ export default function App() {
         </div>
       </header>
 
-      <div className="shell">
+      {view === "admin" ? (
+        <div className="shell admin-shell">
+          <AdminCleanup onToast={showToast} />
+        </div>
+      ) : (
+        <div className="shell">
         <main>
           <div className="controls">
             <div className="field">
@@ -271,7 +295,8 @@ export default function App() {
           loading={loadingBookings}
           onCancel={cancelBooking}
         />
-      </div>
+        </div>
+      )}
 
       {modalRoom && (
         <BookingModal
