@@ -12,6 +12,7 @@ import { getAuthUrl, exchangeCode, getUserInfo } from "./google.js";
 import roomsRouter from "./routes/rooms.js";
 import bookingsRouter from "./routes/bookings.js";
 import scheduleRouter from "./routes/schedule.js";
+import adminRouter from "./routes/admin.js";
 import { addClient, broadcast } from "./sync.js";
 
 const app = express();
@@ -74,7 +75,13 @@ app.get("/auth/google/callback", async (req, res) => {
 
 app.get("/api/me", (req, res) => {
   if (!req.session?.user) return res.status(401).json({ user: null });
-  res.json({ user: req.session.user });
+  const admins = (process.env.ADMIN_EMAILS || "")
+    .split(",")
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
+  const isAdmin =
+    admins.length > 0 && admins.includes(req.session.user.email.toLowerCase());
+  res.json({ user: { ...req.session.user, isAdmin } });
 });
 
 app.post("/auth/logout", (req, res) => {
@@ -105,6 +112,7 @@ app.use("/api", (req, res, next) => {
 app.use("/api", roomsRouter);
 app.use("/api", bookingsRouter);
 app.use("/api", scheduleRouter);
+app.use("/api", adminRouter);
 
 // ---------- Real-time stream (SSE) ----------
 // client เปิด EventSource("/api/stream") ค้างไว้ เพื่อรับสัญญาณว่ามีการเปลี่ยนแปลง
